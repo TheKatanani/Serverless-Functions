@@ -1,9 +1,6 @@
 import { NextResponse } from 'next/server';
-import { getBooks, getReviews } from '@/app/lib/data';
+import { getBookById, getReviewsForBook } from '@/app/lib/data';
 
-/**
- * GET handler for retrieving all reviews for a specific book.
- */
 export async function GET(
   _req: Request,
   { params }: { params: Promise<{ bookId: string }> }
@@ -11,14 +8,12 @@ export async function GET(
   try {
     const { bookId } = await params;
 
-    // Validate book ID
     if (!bookId) {
       return NextResponse.json({ message: 'Book ID is required.' }, { status: 400 });
     }
 
     // Check if the book exists
-    const books = await getBooks();
-    const bookExists = books.some((b) => b.id === bookId);
+    const bookExists = await getBookById(bookId);
 
     if (!bookExists) {
       return NextResponse.json(
@@ -28,8 +23,7 @@ export async function GET(
     }
 
     // Fetch reviews for that book
-    const reviews = await getReviews();
-    const bookReviews = reviews.filter((review) => review.bookId === bookId);
+    const bookReviews = await getReviewsForBook(bookId);
 
     return NextResponse.json(bookReviews, { status: 200 });
   } catch (error) {

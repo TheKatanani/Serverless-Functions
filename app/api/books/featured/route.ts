@@ -1,13 +1,9 @@
 import { NextResponse } from 'next/server';
-import { getBooks } from '@/app/lib/data';
+import { getFeaturedBooks } from '@/app/lib/data';
 
-/**
- * GET handler for retrieving all featured books.
- */
 export async function GET() {
     try {
-        const books = await getBooks();
-        const featuredBooks = books.filter(book => book.featured === true);
+        const featuredBooks = await getFeaturedBooks();
         return NextResponse.json(featuredBooks);
     } catch (error) {
         console.error(error);

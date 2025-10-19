@@ -1,14 +1,10 @@
 import { NextResponse } from 'next/server';
-import { getBooks } from '@/app/lib/data';
+import { getBookById } from '@/app/lib/data';
 
-/**
- * GET handler for retrieving a single book by its ID.
- */
 export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
     try {
-        const books = await getBooks();
         const paramsResolved = await params;
-        const book = books.find(b => b.id === paramsResolved.id);
+        const book = await getBookById(paramsResolved.id);
         
         if (book) {
             return NextResponse.json(book);
